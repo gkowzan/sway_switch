@@ -217,12 +217,12 @@ std::vector<std::pair<int,json> > get_ws_windows() {
     std::string output = command_output(sway_cmd);
     std::vector<std::pair<int,json> > ws_windows;
     json sway_json = json::parse(output);
-    int w_num = 0;
+    int w_num;
     for(auto &o : sway_json["nodes"]) {
         if(o["name"].get<std::string>() != "__i3" && o["type"].get<std::string>() == "output") {
             for(auto &w : o["nodes"]) {
                 if(w["type"].get<std::string>() == "workspace") {
-                    w_num++;
+                    w_num = w["num"].get<int>();
                     for(auto & wf : w["floating_nodes"])
                         ws_windows.emplace_back(w_num, wf);
                     std::vector<json> new_windows = extract_leaf_nodes(w);
